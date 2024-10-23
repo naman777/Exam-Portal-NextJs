@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  rollNo        String?
+  branch        String?
+  phone         String?
+  imageurl      String?
+  signUp        Boolean  @default(false)
+  testSlotId    String?  
+  testSlot      TestSlot? @relation(fields: [testSlotId], references: [id])
+  testApplied   Boolean  @default(false)
+  testGiven     Boolean  @default(false)
+  testSubmitted Boolean  @default(false)
+  marks         Int      @default(0)
+  createdAt     DateTime @default(now())
+}
+
+model Admin {
+  id                  String   @id @default(cuid())
+  email               String   @unique
+  otp                 String?
+  otpExpiresAt        DateTime?  
+  otpAttempts         Int      @default(0)
+  otpLastAttemptAt    DateTime?  
+  otpRateLimitResetAt DateTime?  
+}
+
+model Mcq {
+  id        String      @id @default(cuid())
+  question  String
+  option1   String
+  option2   String
+  option3   String
+  option4   String
+  imageurl  String?
+  answer    String
+  marks     Int
+  createdAt DateTime    @default(now())
+  testId    String
+  test      TestSlot    @relation(fields: [testId], references: [id])
+}
+
+model CodingQuestion {
+  id                  String   @id @default(cuid())
+  title               String
+  description         String
+  sampleTestCase      String
+  sampleTestCaseOutput String
+  testCases           String
+  testCasesOutput     String
+  marks               Int
+  difficulty          String
+  createdAt           DateTime @default(now())
+  testId              String
+  test                TestSlot    @relation(fields: [testId], references: [id])
+}
+
+model Test {
+  id               String           @id @default(cuid())
+  name             String
+  date             DateTime
+  createdAt        DateTime         @default(now())
+  testSlots        TestSlot[]       
+}
+
+model TestSlot {
+  id               String   @id @default(cuid())
+  timeSlot         DateTime
+  endTime          DateTime
+  usersAllowed     Int 
+  totalMarks       Int
+  testId           String
+  test             Test     @relation(fields: [testId], references: [id])
+  usersFilled      Int @default(0)
+  noOfMcqs         Int @default(0)
+  noOfCodingQues   Int  @default(0)
+  users            User[]   
+  mcqs             Mcq[]
+  codingQuestions  CodingQuestion[]
+}
