@@ -13,10 +13,11 @@ const Dashboard = () => {
     const checkUserExistence = async () => {
       if (session && email) {
         const res = await isUserExist(email);
+        console.log(res);
         if (!res) {
           router.push("/signup");
         } else {
-          router.push("/user/dashboard");
+          router.push("/dashboard");
         }
       }
     };

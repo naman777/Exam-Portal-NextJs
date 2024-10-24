@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
         rollNo,
         branch,
         phone,
+        signUp: true,
         imageurl: imageUrl // Store the Cloudinary image URL in the database
       }
     });

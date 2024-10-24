@@ -1,0 +1,13 @@
+/* Custom styles for react-calendar */
+.react-calendar {
+    width: 100%;
+    border: none;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .react-calendar__tile--active {
+    background-color: #34d399; /* Green color */
+    color: white;
+  }
+  

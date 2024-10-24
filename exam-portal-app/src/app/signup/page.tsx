@@ -132,7 +132,7 @@ export default function FaceVerificationForm() {
           const data = res.data;
           if (data.success) {
             alert("Registration successful!");
-            router.push("/user/dashboard");
+            router.push("/dashboard");
           } else {
             alert(data.message);
             router.push("/");
