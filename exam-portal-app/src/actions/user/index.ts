@@ -235,6 +235,7 @@ export const checkForTest = async (email: string) => {
             sampleTestCase: true,
             sampleTestCaseOutput: true,
             marks: true,
+            difficulty: true,
           }
         },
       }
@@ -275,7 +276,7 @@ export const checkForTest = async (email: string) => {
   }
 }
 
-export const handleTestSubmit = async (email: string, mcqAnswers: Record<string, string>) => {
+export const handleTestSubmit = async (email: string, mcqAnswers: Record<string, string>, warnings: number) => {
   try {
     // Fetch user
     const user = await prisma.user.findUnique({
@@ -345,6 +346,7 @@ export const handleTestSubmit = async (email: string, mcqAnswers: Record<string,
         testSubmitted: true,
         marks: userMarks,
         testGiven: true,
+        warnings:warnings
       },
     });
 

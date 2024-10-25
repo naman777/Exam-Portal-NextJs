@@ -25,7 +25,7 @@ const Dashboard = () => {
   }, [session, email, router]);
 
   return (
-    <div className="bg-gray">
+    <div className="">
       {session ? (
         <div>
           <h1>Dashboard</h1>

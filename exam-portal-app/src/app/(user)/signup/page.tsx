@@ -12,11 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Image from 'next/image';
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { set } from "date-fns";
 import Loader from "@/components/ui/loader";
+import acmLogo from "/public/acmlogo2.svg";
+import frontGroup from "/public/smart-people.svg";
 
 const MODEL_URL = "http://127.0.0.1:5000";
 
@@ -132,15 +134,17 @@ export default function FaceVerificationForm() {
           formDataToSend.append("branch", formData.branch);
           formDataToSend.append("phoneNo", formData.phoneNo);
           formDataToSend.append("image", blob, "captured_face.jpg");
-          formDataToSend.append("email", email);    
-          
+          formDataToSend.append("email", email);
+
           setLoading(true);
 
-          const res = await axios.post("/api/user/register", formDataToSend, { withCredentials: true });
+          const res = await axios.post("/api/user/register", formDataToSend, {
+            withCredentials: true,
+          });
           const data = res.data;
 
           setLoading(false);
-          
+
           if (data.success) {
             alert("Registration successful!");
             router.push("/dashboard");
@@ -159,120 +163,161 @@ export default function FaceVerificationForm() {
   };
 
   return (
-    <div className="min-h-screen p-8">
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-6">
-        <h1 className="text-2xl font-bold mb-6">Student Registration</h1>
-
-        <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            required
+    <div className=" bg-white min-h-screen">
+      <div className="flex justify-between items-center bg-white w-full p-0.5 shadow-2xl">
+        {/* Logo in the center */}
+        <div className="flex-1 flex justify-center">
+          <Image
+            src={acmLogo}
+            alt="Logo"
+            width={130}
+            height={500}
+            className="z-10"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="rollNo">Roll No</Label>
-          <Input
-            id="rollNo"
-            name="rollNo"
-            value={formData.rollNo}
-            onChange={handleInputChange}
-            required
-          />
+        {/* Signout button aligned to the right */}
+        {/* <div className="ml-auto">
+          <button className="bg-lightblue px-2 py-1 text-lg text-white rounded-lg " onClick={()=>{
+            signOut();
+          }}>
+            Signout
+          </button>
+        </div> */}
+      </div>
+
+      <div className=" flex justify-between">
+        <div>
+          <Image src="/acm.png" alt="Logo" width={100} height={1200} />
+          <Image src="/acm.png" alt="Logo" width={100} height={1200} />
         </div>
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-md mx-auto space-y-6 mt-12"
+        >
+          <h1 className="text-2xl font-bold mb-6">Student Registration</h1>
 
-        <div className="space-y-2">
-          <Label htmlFor="branch">Branch</Label>
-          <Select onValueChange={handleBranchChange} value={formData.branch}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select branch" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="COE">Computer Engineering</SelectItem>
-              <SelectItem value="COPC">Computer Science Engineering</SelectItem>
-              <SelectItem value="ENC">
-                Electronics and Computer Engineering
-              </SelectItem>
-              <SelectItem value="ECE">
-                Electronics and Communication Engineering
-              </SelectItem>
-              <SelectItem value="COBS">
-                Computer Science abd Business Systems Engineering
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          <div className="space-y-2">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="phoneNo">Phone No</Label>
-          <Input
-            id="phoneNo"
-            name="phoneNo"
-            type="tel"
-            value={formData.phoneNo}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+          <div className="space-y-2">
+            <Label htmlFor="rollNo">Roll No</Label>
+            <Input
+              id="rollNo"
+              name="rollNo"
+              value={formData.rollNo}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
-        <div className="space-y-4">
-          <Label>Face Verification</Label>
-          {isCapturing ? (
-            <div className="relative">
-              <Webcam
-                audio={false}
-                ref={webcamRef}
-                screenshotFormat="image/jpeg"
-                className="w-full rounded-lg"
-              />
-              <Button
-                onClick={captureImage}
-                className="absolute bottom-4 left-1/2 transform -translate-x-1/2"
-              >
-                Capture
-              </Button>
-            </div>
-          ) : capturedImage ? (
-            <div className="space-y-2">
-              
-              <Image src={capturedImage} alt="Captured face" 
-              className="w-full rounded-lg" width={500} height={500} />  
+          <div className="space-y-2">
+            <Label htmlFor="branch">Branch</Label>
+            <Select onValueChange={handleBranchChange} value={formData.branch}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select branch" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="COE">Computer Engineering</SelectItem>
+                <SelectItem value="COPC">
+                  Computer Science Engineering
+                </SelectItem>
+                <SelectItem value="ENC">
+                  Electronics and Computer Engineering
+                </SelectItem>
+                <SelectItem value="ECE">
+                  Electronics and Communication Engineering
+                </SelectItem>
+                <SelectItem value="COBS">
+                  Computer Science abd Business Systems Engineering
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="phoneNo">Phone No</Label>
+            <Input
+              id="phoneNo"
+              name="phoneNo"
+              type="tel"
+              value={formData.phoneNo}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
-              <div className="flex justify-between">
-                <Button onClick={retakeImage} variant="outline">
-                  Retake
-                </Button>
-                <Button onClick={verifyImage} disabled={isVerified}>
-                  {isVerified ? "Verified" : "Verify"}
+          <div className="space-y-4">
+            <Label>Face Verification</Label>
+            {isCapturing ? (
+              <div className="relative">
+                <Webcam
+                  audio={false}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  className="w-full rounded-lg"
+                />
+                <Button
+                  onClick={captureImage}
+                  className="ml-56 mt-4 bottom-4 left-1/2 transform -translate-x-1/2 bg-lightblue text-white"
+                >
+                  Capture
                 </Button>
               </div>
-            </div>
-          ) : (
-            <Button onClick={() => setIsCapturing(true)} className="w-full">
-              Start Face Capture
-            </Button>
-          )}
+            ) : capturedImage ? (
+              <div className="space-y-2">
+                <Image
+                  src={capturedImage}
+                  alt="Captured face"
+                  className="w-full rounded-lg "
+                  width={500}
+                  height={500}
+                />
+
+                <div className="flex justify-between">
+                  <Button onClick={retakeImage} variant="outline">
+                    Retake
+                  </Button>
+                  <Button onClick={verifyImage} disabled={isVerified}>
+                    {isVerified ? "Verified" : "Verify"}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Button onClick={() => setIsCapturing(true)} className="w-full">
+                Start Face Capture
+              </Button>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full bg-lightblue text-white "
+            disabled={!isVerified}
+          >
+            Submit
+          </Button>
+        </form>
+        <div>
+          <Image
+            src={frontGroup}
+            alt="Logo"
+            width={600}
+            height={1200}
+            className="m-10"
+          />
         </div>
+      </div>
 
-        <Button
-          type="submit"
-          className="w-full bg-black text-white "
-          disabled={!isVerified}
-        >
-          Submit
-        </Button>
-      </form>
-
-      {
-        loading && (
-          <Loader/>
-        )
-      }
+      {loading && <Loader />}
     </div>
   );
 }

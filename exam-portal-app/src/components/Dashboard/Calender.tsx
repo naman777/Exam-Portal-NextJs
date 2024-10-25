@@ -133,8 +133,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ tests }) => {
               <div
                 key={slot.id}
                 onClick={() => {
-                  //@ts-ignore
-                  handleSlotClick(slot.id, slot.timeSlot.toLocaleTimeString());
+                  handleSlotClick(slot.id as any, slot.timeSlot.toLocaleTimeString());
                 }}
                 className="cursor-pointer"
               >
