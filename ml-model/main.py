@@ -61,7 +61,7 @@ def extract_embeddings(image_data):
     embeddings = model(face.unsqueeze(0))
     return embeddings.detach().numpy()
 
-@app.route('/match', methods=['POST'])
+@app.route('/match', methods=['POST'])  
 def match_faces():
     if 'image1' not in request.files or 'image2' not in request.files:
         return jsonify({'result' : False, 'message': 'Images not received'})

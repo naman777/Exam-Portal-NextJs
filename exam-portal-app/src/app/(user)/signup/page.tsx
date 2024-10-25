@@ -240,7 +240,7 @@ export default function FaceVerificationForm() {
             <div className="space-y-2">
               
               <Image src={capturedImage} alt="Captured face" 
-              className="w-full rounded-lg" />  
+              className="w-full rounded-lg" width={500} height={500} />  
 
 
               <div className="flex justify-between">

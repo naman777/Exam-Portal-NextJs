@@ -2,6 +2,12 @@
 import React, { useState } from "react";
 import categories from "/public/categories.svg";
 import Image from "next/image";
+import Loader from "../ui/loader";
+import { handleTestSubmit } from "@/actions/user";
+import Email from "next-auth/providers/email";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface McqSidebarProps {
   mcqAnswers: Record<string, string>;
@@ -21,12 +27,26 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
   handleNext,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to toggle the modal
+  const [loading, setLoading] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const router = useRouter();
 
-  const handleSubmit = () => {
-    console.log("Quiz Submitted!");
+  const {data: session} = useSession();
+  const handleSubmit = async () => {
+    setLoading(true);
+    console.log(mcqAnswers);
+    const res = await handleTestSubmit(session!.user!.email!, mcqAnswers);
+    setLoading(false);
+
+    if(res.success){
+        toast.success("Test submitted successfully");
+        router.push("/dashboard");
+    }
+    else{
+        toast.error(res.message);
+    }
     closeModal();
   };
 
@@ -61,7 +81,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
             <button
               onClick={handlePrev}
               disabled={currentQuestionIndex === 0}
-              className="px-4 py-2 font-bold border-lightblue rounded-md bg-white hover:bg-lightblue hover:text-white text-lightblue border-2"
+              className="px-4 py-2 font-bold border-lightblue rounded-md bg-white hover:bg-lightblue hover: text-lightblue border-2"
             >
               &lt; Previous
             </button>
@@ -116,6 +136,9 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
           </div>
         </div>
       )}
+      {
+        loading && <Loader />
+      }
     </>
   );
 };

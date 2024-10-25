@@ -19,36 +19,39 @@ export interface Mcq {
 interface McqComponentProps {
   mcq: Mcq;
   updateAnswer: (questionId: number, answer: string) => void;
+  mcqAnswers: Record<number, string>;
 }
 
-const McqComponent: React.FC<McqComponentProps> = ({ mcq, updateAnswer }) => {
+const McqComponent: React.FC<McqComponentProps> = ({ mcq, updateAnswer, mcqAnswers }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedAnswers = JSON.parse(
-      localStorage.getItem("mcqanswers") || "{}"
-    );
-    if (storedAnswers[mcq.id]) {
-      setSelectedOption(storedAnswers[mcq.id]);
+    // Retrieve the saved answer from `mcqAnswers` if it exists
+    if (mcqAnswers[mcq.id]) {
+      setSelectedOption(mcqAnswers[mcq.id]);
     }
-  }, [mcq]);
+  }, [mcq, mcqAnswers]);
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     updateAnswer(mcq.id, option);
+
+    // Save selected answer to local storage to persist
+    const updatedAnswers = { ...mcqAnswers, [mcq.id]: option };
+    localStorage.setItem("mcqanswers", JSON.stringify(updatedAnswers));
   };
 
   const optionLabels = ["A", "B", "C", "D"];
 
   return (
-    <div className="p-4  rounded-lg shadow-xl bg-white">
+    <div className="p-4 rounded-lg shadow-xl bg-white">
       <h1 className="text-2xl font-bold">Multiple Choice Questions</h1>
       <h2 className="text-lg mt-7 text-[#4a4949]">
-        Question {mcq.id}: {mcq.question}
+        Question: {mcq.question}
       </h2>
       {mcq.imageurl && (
         <Image
-          src={mcq.imageurl} // Replace with the actual path to your image
+          src={mcq.imageurl}
           alt="question image"
           width={800}
           height={200}
@@ -63,7 +66,7 @@ const McqComponent: React.FC<McqComponentProps> = ({ mcq, updateAnswer }) => {
             <button
               key={index}
               onClick={() => handleOptionClick(option)}
-              className={`flex items-center gap-2 w-full text-left p-3  rounded-lg ${
+              className={`flex items-center gap-2 w-full text-left p-3 rounded-lg ${
                 selectedOption === option
                   ? "bg-[#0BAADD57] text-black"
                   : "bg-[#F4F4F6]"

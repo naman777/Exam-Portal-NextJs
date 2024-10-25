@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import dots from "/public/dots.svg"
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface TimerProps {
   examDate: Date; // The date when the exam starts
@@ -35,6 +36,16 @@ const Timer: React.FC<TimerProps> = ({ examDate }) => {
     return () => clearInterval(intervalId);
   }, [examDate]);
 
+  const router = useRouter();
+
+  const handleStartTest = async () => {
+    try {
+      router.push("/test");
+    } catch (error) {
+      router.push("/dashboard");
+    }
+  }
+
   return (
     <div className="flex flex-col items-center space-y-4 justify-center rounded-xl bg-white py-10 shadow-xl">
       <h1 className="text-2xl font-bold text-[#575757]">Your exam begins in:</h1>
@@ -57,6 +68,8 @@ const Timer: React.FC<TimerProps> = ({ examDate }) => {
       <button
         disabled={!isClickable}
         className={`px-6 py-2 rounded-md  font-bold text-xl mr-4 ${isClickable ? 'bg-[#28AA38] cursor-pointer text-white' : 'bg-[#CDCDCD] cursor-not-allowed text-[#575757]'}`}
+
+        onClick={handleStartTest}
       >
         Start Test
       </button>
