@@ -49,44 +49,44 @@ export interface TestsForUser {
   testSlots: TestSlotforTest[];
 }
 
-const demotests: TestsForUser[] = [
-  {
-    id: "1",
-    name: "Math Test",
-    date: new Date(2024, 8, 11),
-    testSlots: [
-      {
-        id: "1",
-        timeSlot: new Date(2024, 8, 15, 21, 0),
-        endTime: new Date(2024, 8, 15, 22, 0),
-        usersAllowed: 100,
-        totalMarks: 100,
-        usersFilled: 87,
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Science Test",
-    date: new Date(2024, 8, 18),
-    testSlots: [
-      {
-        id: "2",
-        timeSlot: new Date(2024, 8, 18, 21, 0),
-        endTime: new Date(2024, 8, 18, 22, 0),
-        usersAllowed: 100,
-        totalMarks: 100,
-        usersFilled: 87,
-      },
-    ],
-  },
-];
+// const demotests: TestsForUser[] = [
+//   {
+//     id: "1",
+//     name: "Math Test",
+//     date: new Date(2024, 8, 11),
+//     testSlots: [
+//       {
+//         id: "1",
+//         timeSlot: new Date(2024, 8, 15, 21, 0),
+//         endTime: new Date(2024, 8, 15, 22, 0),
+//         usersAllowed: 100,
+//         totalMarks: 100,
+//         usersFilled: 87,
+//       },
+//     ],
+//   },
+//   {
+//     id: "2",
+//     name: "Science Test",
+//     date: new Date(2024, 8, 18),
+//     testSlots: [
+//       {
+//         id: "2",
+//         timeSlot: new Date(2024, 8, 18, 21, 0),
+//         endTime: new Date(2024, 8, 18, 22, 0),
+//         usersAllowed: 100,
+//         totalMarks: 100,
+//         usersFilled: 87,
+//       },
+//     ],
+//   },
+// ];
 
 export default function DashBoard() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [tests, setTests] = useState<TestsForUser[]>(demotests);
+  const [tests, setTests] = useState<TestsForUser[]>([]);
   const { data: session } = useSession();
   const email = session?.user?.email;
 
@@ -96,7 +96,7 @@ export default function DashBoard() {
         setLoading(true);
         const res = await getUserDetails(email);
         const tests = await getTests();
-        // setTests(tests as TestsForUser[]);
+        setTests(tests as TestsForUser[]);
         setUser(res as User);
         setLoading(false);
       } else {
@@ -109,22 +109,28 @@ export default function DashBoard() {
   return (
     <>
       {user && user.testApplied && !user.testGiven && !user.testSubmitted && (
-        <div>
-          <Timer examDate={user.testSlot!.timeSlot} />
+        <div className="flex flex-col justify-center items-center ">
+          <div className="w-1/2">
+          <Timer examDate={new Date(user.testSlot!.timeSlot)} />
+
+          </div>
+          <div className="w-5/6">
+            
+          <Rules />
+          </div>
         </div>
+        
       )}
 
       {user && !user.testApplied && (
-        
         <div className="flex h-screen">
-        <div className="w-1/7">
-          <Sidebar />
+          <div className="w-1/7 mt-5">
+            <Sidebar />
+          </div>
+          <div className="w-4/5 p-6">
+            <Calendar tests={tests} />
+          </div>
         </div>
-  
-        <div className="w-4/5 p-6">
-          <Calendar tests={tests} />
-        </div>
-      </div>
       )}
 
       {user && user.testGiven && !user.testSubmitted && (

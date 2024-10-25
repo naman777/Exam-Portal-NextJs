@@ -16,18 +16,14 @@ export default function Navbar() {
         {session ? (
           <div className="flex items-center justify-center space-x-2 mr-12">
             {session?.user?.image ? (
-              <img
-                src={session?.user?.image}
-                alt={session?.user?.name || "User image"}
-                className="w-10 h-10 rounded-full"
-              />
+              <Image src={session?.user?.image} alt={session?.user?.name || "User image"} width={40} height={40} className="rounded-full" />
             ) : null}
             <span className="font-bold text-xl">{session?.user?.name}</span>
 
             <div>
                 <button
                     onClick={() => signOut()}
-                    className="bg-black p-2 text-white font-bold text-xl rounded-lg hover:bg-gray-950"
+                    className="bg-lightblue py-1 px-2 text-white font-bold text-lg rounded-lg hover:bg-gray-950"
                 >
                     Sign out
                 </button>

@@ -12,8 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from 'next/image';
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { set } from "date-fns";
+import Loader from "@/components/ui/loader";
 
 const MODEL_URL = "http://127.0.0.1:5000";
 
@@ -81,12 +84,15 @@ export default function FaceVerificationForm() {
 
       const formData = new FormData();
       formData.append("image", blob, "captured_face.jpg");
+      setLoading(true);
 
       const res = await axios.post(MODEL_URL + "/detect_face", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+
+      setLoading(false);
 
       const result = res.data;
       if (result.result) {
@@ -127,9 +133,14 @@ export default function FaceVerificationForm() {
           formDataToSend.append("phoneNo", formData.phoneNo);
           formDataToSend.append("image", blob, "captured_face.jpg");
           formDataToSend.append("email", email);    
+          
+          setLoading(true);
 
           const res = await axios.post("/api/user/register", formDataToSend, { withCredentials: true });
           const data = res.data;
+
+          setLoading(false);
+          
           if (data.success) {
             alert("Registration successful!");
             router.push("/dashboard");
@@ -227,11 +238,11 @@ export default function FaceVerificationForm() {
             </div>
           ) : capturedImage ? (
             <div className="space-y-2">
-              <img
-                src={capturedImage}
-                alt="Captured face"
-                className="w-full rounded-lg"
-              />
+              
+              <Image src={capturedImage} alt="Captured face" 
+              className="w-full rounded-lg" />  
+
+
               <div className="flex justify-between">
                 <Button onClick={retakeImage} variant="outline">
                   Retake
@@ -256,6 +267,12 @@ export default function FaceVerificationForm() {
           Submit
         </Button>
       </form>
+
+      {
+        loading && (
+          <Loader/>
+        )
+      }
     </div>
   );
 }

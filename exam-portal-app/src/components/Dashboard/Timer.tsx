@@ -1,5 +1,7 @@
 "use state";
 import { useState, useEffect } from "react";
+import dots from "/public/dots.svg"
+import Image from "next/image";
 
 interface TimerProps {
   examDate: Date; // The date when the exam starts
@@ -34,25 +36,27 @@ const Timer: React.FC<TimerProps> = ({ examDate }) => {
   }, [examDate]);
 
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <h1 className="text-lg font-bold">Your exam begins in:</h1>
+    <div className="flex flex-col items-center space-y-4 justify-center rounded-xl bg-white py-10 shadow-xl">
+      <h1 className="text-2xl font-bold text-[#575757]">Your exam begins in:</h1>
       <div className="flex space-x-4">
-        <div className="flex flex-col items-center bg-blue-500 text-white p-4 rounded-md">
+        <div className="flex flex-col items-center bg-[#0BAADD] text-white p-4 rounded-md shadow-2xl">
           <span className="text-3xl font-semibold">{timeLeft.hours}</span>
           <span>Hours</span>
         </div>
-        <div className="flex flex-col items-center bg-blue-500 text-white p-4 rounded-md">
+        <Image src={dots} alt="dots" /> 
+        <div className="flex flex-col items-center bg-[#0BAADD] text-white p-4 rounded-md shadow-2xl">
           <span className="text-3xl font-semibold">{timeLeft.minutes}</span>
           <span>Minutes</span>
         </div>
-        <div className="flex flex-col items-center bg-blue-500 text-white p-4 rounded-md">
+        <Image src={dots} alt="dots" /> 
+        <div className="flex flex-col items-center bg-[#0BAADD] text-white p-4 rounded-md shadow-2xl">
           <span className="text-3xl font-semibold">{timeLeft.seconds}</span>
           <span>Seconds</span>
         </div>
       </div>
       <button
         disabled={!isClickable}
-        className={`px-6 py-2 rounded-md ${isClickable ? 'bg-gray-500 cursor-pointer' : 'bg-gray-300 cursor-not-allowed'}`}
+        className={`px-6 py-2 rounded-md  font-bold text-xl mr-4 ${isClickable ? 'bg-[#28AA38] cursor-pointer text-white' : 'bg-[#CDCDCD] cursor-not-allowed text-[#575757]'}`}
       >
         Start Test
       </button>

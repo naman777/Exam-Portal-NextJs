@@ -1,5 +1,5 @@
 export interface Mcq {
-  id: string;
+  id: number;
   question: string;
   option1: string;
   option2: string;
@@ -10,11 +10,10 @@ export interface Mcq {
   marks: number;
   createdAt: Date;
   testId: string;
-  test: TestSlot;
 }
 
 export interface CodingQuestion {
-  id: string;
+  id: number;
   title: string;
   description: string;
   sampleTestCase: string;

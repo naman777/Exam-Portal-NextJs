@@ -36,7 +36,7 @@ model Admin {
 }
 
 model Mcq {
-  id        String      @id @default(cuid())
+  id        Int         @id @default(autoincrement())
   question  String
   option1   String
   option2   String
@@ -51,7 +51,7 @@ model Mcq {
 }
 
 model CodingQuestion {
-  id                  String   @id @default(cuid())
+  id        Int         @id @default(autoincrement())
   title               String
   description         String
   sampleTestCase      String

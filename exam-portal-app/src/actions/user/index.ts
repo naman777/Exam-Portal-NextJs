@@ -45,18 +45,18 @@ export const getUserDetails = async (email: string) => {
         signUp: true,
         testSlotId: true,
         testSlot: {
-            select: {
-                id: true,
-                timeSlot: true,
-                endTime: true,
-            }
+          select: {
+            id: true,
+            timeSlot: true,
+            endTime: true,
+          },
         },
         testApplied: true,
         testGiven: true,
         testSubmitted: true,
         marks: true,
         createdAt: true,
-      }
+      },
     });
 
     return user;
@@ -66,29 +66,108 @@ export const getUserDetails = async (email: string) => {
 };
 
 export const getTests = async () => {
-    try {
-        
-        const tests = await prisma.test.findMany({
-            select:{
-                id: true,
-                name: true,
-                date: true,
-                testSlots: {
-                    select: {
-                        id: true,
-                        timeSlot: true,
-                        endTime: true,
-                        usersAllowed: true,
-                        totalMarks: true,
-                        usersFilled: true,
-                    }
-                }
-            }
-        })
+  try {
+    const tests = await prisma.test.findMany({
+      select: {
+        id: true,
+        name: true,
+        date: true,
+        testSlots: {
+          select: {
+            id: true,
+            timeSlot: true,
+            endTime: true,
+            usersAllowed: true,
+            totalMarks: true,
+            usersFilled: true,
+          },
+        },
+      },
+    });
 
-        return tests;
+    return tests;
+  } catch (error) {}
+};
 
-    } catch (error) {
-        
+export const applyForTestSlot = async (testSlotId: string, email: string) => {
+  try {
+    const test = await prisma.testSlot.findUnique({
+      where: {
+        id: testSlotId,
+      },
+    });
+
+    if(!test){
+      return {
+        success: false,
+        message: "Test slot not found"
+      };
     }
-}
+
+    if(test.usersFilled >= test.usersAllowed){
+      return {
+        success: false,
+        message: "Test slot is full. Apply for another slot"
+      };
+    }
+
+    if(test.timeSlot < new Date()){
+      return {
+        success: false,
+        message: "Test slot time has passed"
+      }
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if(!user){
+      return {
+        success: false,
+        message: "User not found"
+      };
+    }
+
+    if(user.testApplied || user.testGiven){
+      return {
+        success: false,
+        message: "You have already applied for a test slot"
+      };
+    }
+
+    await prisma.user.update({
+      where: {
+        email: email,
+      },
+      data: {
+        testSlotId: testSlotId,
+        testApplied: true,
+      },
+    });
+
+    await prisma.testSlot.update({
+      where: {
+        id: testSlotId,
+      },
+      data: {
+        usersFilled: {
+          increment: 1,
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: "Test slot applied successfully!"
+    };
+
+  } catch (error) {
+    return {
+      success: false,
+      message: "Something went wrong."
+    };
+  }
+};
