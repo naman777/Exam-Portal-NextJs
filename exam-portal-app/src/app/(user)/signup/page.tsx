@@ -20,7 +20,7 @@ import Loader from "@/components/ui/loader";
 import acmLogo from "/public/acmlogo2.svg";
 import frontGroup from "/public/smart-people.svg";
 
-const MODEL_URL = "http://127.0.0.1:5000";
+const MODEL_URL = process.env.ML_MODEL_API_URL as string;
 
 type FormData = {
   name: string;
