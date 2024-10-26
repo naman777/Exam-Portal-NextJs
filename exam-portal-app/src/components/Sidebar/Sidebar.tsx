@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
   const router = useRouter();
-
+  const pathname = usePathname();
+  
+  useEffect(() => {
+    if (pathname === "/dashboard") {
+      setActive("Dashboard");
+    } else if (pathname === "/leaderboard") {
+      setActive("Leaderboard");
+    }
+  }, [pathname]);
   const menuItems = [
     { name: "Dashboard", icon: "/dashBlack.svg", iconWhite: "/dashboard_icon.svg" },
     { name: "Leaderboard", icon: "/Leaderboard_icon.png", iconWhite: "/leaderboardwhite.png" },

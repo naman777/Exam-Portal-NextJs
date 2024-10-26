@@ -362,3 +362,31 @@ export const handleTestSubmit = async (email: string, mcqAnswers: Record<string,
     };
   }
 };
+
+export const getLeaderboard = async () => {
+  try {
+    const users = await prisma.user.findMany({
+      where:{
+        testGiven: true,
+        testSubmitted: true
+      },
+      select: {
+        email: true,
+        name: true,
+        marks: true,
+      },
+    })
+
+    return {
+      success: true,
+      users
+    }
+
+
+  } catch (error) {
+    return {
+      success: false,
+      message: "Something went wrong"
+    }
+  }
+}
