@@ -1,5 +1,6 @@
 "use server";
 import prisma from "../../../lib/db";
+import createRedisClient from "../../../lib/redisClient";
 
 export async function isUserExist(email: string) {
   try {
@@ -277,6 +278,8 @@ export const checkForTest = async (email: string) => {
 }
 
 export const handleTestSubmit = async (email: string, mcqAnswers: Record<string, string>, warnings: number) => {
+  const redis = createRedisClient(); 
+
   try {
     // Fetch user
     const user = await prisma.user.findUnique({
@@ -329,24 +332,37 @@ export const handleTestSubmit = async (email: string, mcqAnswers: Record<string,
     let userMarks = 0;
     const mcqs = testSlot.mcqs;
 
-    mcqs.forEach((mcq) => {
-      const answerId = mcq.id.toString();
+    const cacheKey = `answers:${email}:${user.testSlotId}`;
 
-      if (parseInt(answerId) in mcqAnswers) {
-        const userAnswer = mcqAnswers[answerId];
-        if (userAnswer === mcq.answer) {
-          userMarks += mcq.marks;
+    const cachedMarks = await redis.get(cacheKey);
+    if (cachedMarks) {
+      console.log("Using cached marks");
+      userMarks = parseInt(cachedMarks, 10); 
+    } else {
+      // Evaluate the answers
+      mcqs.forEach((mcq) => {
+        const answerId = mcq.id.toString();
+
+        if (parseInt(answerId) in mcqAnswers) {
+          const userAnswer = mcqAnswers[answerId];
+          if (userAnswer === mcq.answer) {
+            userMarks += mcq.marks;
+          }
         }
-      }
-    });
+      });
 
+      // Cache the marks with an expiration time (e.g., 1 hour)
+      await redis.set(cacheKey, userMarks, 'EX', 3600);
+    }
+
+    // Update marks in the database
     await prisma.user.update({
       where: { email },
       data: {
         testSubmitted: true,
         marks: userMarks,
         testGiven: true,
-        warnings:warnings
+        warnings: warnings,
       },
     });
 
@@ -356,6 +372,7 @@ export const handleTestSubmit = async (email: string, mcqAnswers: Record<string,
       userMarks,
     };
   } catch (error) {
+    console.error(error); // Log error for debugging
     return {
       success: false,
       message: "An error occurred while submitting the test",
