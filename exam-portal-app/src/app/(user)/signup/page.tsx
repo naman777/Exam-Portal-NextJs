@@ -85,7 +85,7 @@ export default function FaceVerificationForm() {
       const blob = new Blob([ab], { type: mimeString });
 
       const formData = new FormData();
-      formData.append("image", blob, "captured_face.jpg");
+      formData.append("file", blob, "captured_face.jpg");
       setLoading(true);
 
       const res = await axios.post(MODEL_URL + "/count_faces", formData, {
