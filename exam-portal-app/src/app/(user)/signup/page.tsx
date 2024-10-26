@@ -20,7 +20,7 @@ import Loader from "@/components/ui/loader";
 import acmLogo from "/public/acmlogo2.svg";
 import frontGroup from "/public/smart-people.svg";
 
-const MODEL_URL = process.env.ML_MODEL_API_URL as string;
+const MODEL_URL = "https://face-detection-c8td.onrender.com"
 
 type FormData = {
   name: string;
@@ -88,7 +88,7 @@ export default function FaceVerificationForm() {
       formData.append("image", blob, "captured_face.jpg");
       setLoading(true);
 
-      const res = await axios.post(MODEL_URL + "/detect_face", formData, {
+      const res = await axios.post(MODEL_URL + "/count_faces", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
