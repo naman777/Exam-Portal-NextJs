@@ -109,7 +109,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
                 ))}
               </div>
             </div>
-            <div className="mb-6 bg-gray rounded-lg p-3">
+            {/* <div className="mb-6 bg-gray rounded-lg p-3">
               <h3 className="text-lg font-medium mb-2">Coding Questions</h3>
               <div className="grid grid-cols-5 gap-2">
                 {Array.from({ length: codingQuestions }, (_, index) => (
@@ -129,7 +129,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
                   </button>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         ) : (
           <div>
@@ -151,7 +151,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
                 ))}
               </div>
             </div>
-            <div className="mb-6 bg-gray rounded-lg p-3">
+            {/* <div className="mb-6 bg-gray rounded-lg p-3">
               <h3 className="text-lg font-medium mb-2">Coding Questions</h3>
               <div className="grid grid-cols-5 gap-2">
                 {Array.from({ length: codingQuestions }, (_, index) => (
@@ -171,7 +171,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
                   </button>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         )}
 
@@ -223,7 +223,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center ">
           <div className="bg-gray p-6 rounded-lg shadow-lg w-1/3">
             <div className="flex flex-col ">
               <h2 className="text-2xl font-semibold mb-4">
@@ -243,7 +243,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
                 ))}
               </div>
             </div>
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <h1 className="text-xl font-semibold">Mcq Questions Review</h1>
               <div className="grid grid-cols-5 gap-2 mb-6">
                 {Array.from({ length: codingQuestions }, (_, index) => (
@@ -259,7 +259,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
             <div className="flex justify-between">
               <button
                 onClick={closeModal}

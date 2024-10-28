@@ -250,7 +250,7 @@ export default function Home() {
         )}
 
         {/* Toggle Button for MCQ and Coding */}
-        <div className="flex space-x-4 mb-6">
+        {/* <div className="flex space-x-4 mb-6">
           <button
             onClick={() => setShowCoding(false)}
             className={`px-4 py-2 font-bold ${
@@ -269,11 +269,9 @@ export default function Home() {
           >
             Coding
           </button>
-        </div>
+        </div> */}
 
-        {/* Render MCQ or Coding Section */}
-        {!showCoding
-          ? mcqs &&
+        { mcqs &&
             mcqs.length > 0 && (
               <McqComponent
                 mcq={mcqs[currentQuestionIndex]}
@@ -281,17 +279,9 @@ export default function Home() {
                 mcqAnswers={mcqAnswers}
               />
             )
-          : CodingQuestions &&
-            CodingQuestions.length > 0 && (
-              <CodingPage
-                question={CodingQuestions[codingQuestionIndex]}
-                currentCode={currentCode}
-                setCurrentCode={setCurrentCode}
-              />
-            )}
+          }
       </div>
 
-      {/* Sidebar */}
       {mcqs && mcqs.length > 0 && (
         <McqSidebar
           mcqAnswers={mcqAnswers}
