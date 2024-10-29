@@ -239,6 +239,9 @@ export default function FaceVerificationForm() {
                 <SelectItem value="COBS">
                   Computer Science abd Business Systems Engineering
                 </SelectItem>
+                <SelectItem value="other">
+                  Other 
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
