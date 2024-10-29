@@ -20,16 +20,37 @@ const SubmitButton = ({
   return (
     <button
       type="submit"
-      className="flex gap-2 self-center px-9 py-4 mt-8 max-w-full text-xl font-semibold text-white whitespace-nowrap bg-lightblue rounded-2xl shadow-[0px_8px_23px_rgba(173,220,255,1)] w-[180px]"
+      // className="flex gap-2 content-center self-center px-9 py-4 mt-8 max-w-full text-xl font-semibold text-white whitespace-nowrap bg-lightblue rounded-2xl shadow-[0px_8px_23px_rgba(173,220,255,1)] w-[180px]"
+      style={{
+        backgroundColor: "#0baadd",
+        color: "white",
+        padding: "0.75rem 1.5rem",
+        borderRadius: "1rem",
+        boxShadow: "0px 8px 23px rgba(173, 220, 255, 1)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
+      }}
       onClick={onClick}
       disabled={disabled}
     >
-      <span className="grow">Signin Now </span>
+      <span
+        className="grow"
+        style={{
+          fontSize: "1.25rem",
+          fontWeight: "bold",
+          whiteSpace: "nowrap",
+          alignSelf: "center",
+        }}
+      >
+        Signin Now{" "}
+      </span>
       <img
         loading="lazy"
         src="https://cdn.builder.io/api/v1/image/assets/TEMP/1b3f218f4269107c990a1fffcd133ff33dbba696fed536ec177ac34a3f8adbee?placeholderIfAbsent=true&apiKey=3bcad2a00ff743a3a851fc72d0289ec0"
         alt=""
-        className="object-contain shrink-0 my-auto aspect-square w-[18px]"
+        className="mt-1"
       />
     </button>
   );
@@ -60,7 +81,7 @@ export default function Page() {
   useEffect(() => {
     if (visibleIndex < words.length - 1) {
       const timer = setTimeout(() => {
-        setVisibleIndex(prev => prev + 1);
+        setVisibleIndex((prev) => prev + 1);
       }, 500); // Adjust timing as needed
       return () => clearTimeout(timer);
     } else {
@@ -74,8 +95,8 @@ export default function Page() {
 
   return (
     <>
-      <div className="bg-white overflow-y-hidden">
-        <div className="bg-white shadow-2xl flex justify-center py-0.5 overflow-y-hidden">
+      <div className="bg-white flex  overflow-y-hidden">
+        <div className="bg-white absolute shadow-2xl flex justify-center py-0.5 overflow-y-hidden w-full">
           <Image
             src={acmLogo}
             alt="Logo"
@@ -84,49 +105,55 @@ export default function Page() {
             className="z-10"
           />
         </div>
-        <div className="flex justify-between">
-          <Image src="/acm.png" alt="Logo" width={100} height={1200} />
-          <h1 className="text-black font-extrabold text-6xl absolute ml-36 mt-8">
-            Apply Now!
-          </h1>
-          <h1 className="text-black font-extrabold text-6xl ml-12 mt-36">
-            <AnimatePresence mode="wait">
-              {words.map((word, index) => (
-                <motion.span
-                  key={word + index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={index <= visibleIndex ? {
-                    opacity: 1,
-                    y: 0
-                  } : {
-                    opacity: 0,
-                    y: 20
-                  }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{
-                    duration: 0.3
-                  }}
-                  className="inline-block mr-2"
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </AnimatePresence>
-          </h1>
-          <div className="absolute mt-96 ml-40 mr-2">
-            <SubmitButton
-              onClick={() => {
-                signIn("google");
-              }}
-              disabled={false}
-            />
+        <div className="flex">
+          <Image src="/acm.png" alt="Logo" width={170} height={1200} />
+          <div className="flex flex-col  gap-12 my-32">
+            <h1 className="text-black font-bold text-6xl ml-4">
+              Apply Now!
+            </h1>
+            <h1 className="text-black w-fit font-bold text-6xl ml-4">
+              <AnimatePresence mode="wait">
+                {words.map((word, index) => (
+                  <motion.span
+                    key={word + index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={
+                      index <= visibleIndex
+                        ? {
+                            opacity: 1,
+                            y: 0,
+                          }
+                        : {
+                            opacity: 0,
+                            y: 20,
+                          }
+                    }
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{
+                      duration: 0.3,
+                    }}
+                    className="inline-block mr-2"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </AnimatePresence>
+            </h1>
+            <div className="mt-12 ml-4">
+              <SubmitButton
+                onClick={() => {
+                  signIn("google");
+                }}
+                disabled={false}
+              />
+            </div>
           </div>
           <Image
             src={frontGroup}
             alt="Logo"
             width={600}
             height={1200}
-            className="m-10"
+            className="mt-24 m-10"
           />
         </div>
       </div>
