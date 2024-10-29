@@ -354,7 +354,7 @@ export const handleTestSubmit = async (email: string, mcqAnswers: Record<string,
 
       // Cache the marks with an expiration time (e.g., 1 hour)
       console.log("Caching marks");
-      await redis.set(cacheKey, userMarks, 'EX', 3600);
+      await redis.set(cacheKey, userMarks, 'EX', 2000);
     }
 
     // Update marks in the database
