@@ -1,17 +1,16 @@
 import Redis from 'ioredis';
 
+let redis: Redis | undefined;
+
 declare global {
   // Extend global type to include redisClient for reuse in non-production environments
   var redisClient: Redis | undefined;
 }
 
-let redis: Redis;
-
-// Initialize Redis client only once (singleton)
 const createRedisClient = () => {
   if (!global.redisClient) {
     console.log('Initializing new Redis client...');
-    
+
     global.redisClient = new Redis(process.env.REDIS_URL!);
 
     global.redisClient.on('error', (err: any) => {
@@ -23,7 +22,7 @@ const createRedisClient = () => {
     });
   }
 
-  redis = global.redisClient;
+  redis = global.redisClient; // Reuse the existing client
 
   return redis;
 };
