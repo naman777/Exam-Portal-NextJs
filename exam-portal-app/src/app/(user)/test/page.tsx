@@ -37,6 +37,20 @@ export default function Home() {
     }
     return {};
   });
+  const [answeredQuestion, setAnsweredQuestions] = useState<Record<number, boolean>>(() => {
+    if (typeof window !== "undefined") {
+      return JSON.parse(localStorage.getItem("answeredQuestion") || "{}");
+    }
+    return {};
+  });
+  
+  const updateAnsweredQuestions = (questionIndex: number) => {
+    const updatedAnswers = { ...answeredQuestion, [questionIndex]: true };
+    setAnsweredQuestions(updatedAnswers);
+    localStorage.setItem("answeredQuestion", JSON.stringify(updatedAnswers));
+  };
+  
+
   const [mcqs, setMcqs] = useState<Mcq[]>([]);
   const [CodingQuestions, setCodingQuestions] = useState<CodingQuestion[]>([]); // Coding questions
   const [showCoding, setShowCoding] = useState(false); // Toggle between MCQ and coding
@@ -236,6 +250,8 @@ export default function Home() {
     localStorage.setItem("mcqanswers", JSON.stringify(newAnswers));
   };
 
+  
+
   const toggleSection = () => {
     setShowCoding((prev) => !prev); // Toggle between MCQ and Coding
   };
@@ -277,6 +293,8 @@ export default function Home() {
                 mcq={mcqs[currentQuestionIndex]}
                 updateAnswer={updateAnswer}
                 mcqAnswers={mcqAnswers}
+                updateAnsweredQuestions={updateAnsweredQuestions}
+                questionIndex={currentQuestionIndex}
               />
             )
           }
@@ -297,6 +315,7 @@ export default function Home() {
           codingQuestionIndex={codingQuestionIndex}
           handleCodingQuestionClick={handleCodingQuestionClick}
           warning={warning}
+          answeredQuestion={answeredQuestion}
         />
       )}
     </div>

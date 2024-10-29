@@ -22,7 +22,8 @@ interface McqSidebarProps {
   setCurrentCode: (code: string) => void; // Function to update code
   codingQuestionIndex: number; // Current coding question index
   handleCodingQuestionClick: (index: number) => void; // Handle coding question navigation
-  warning: number
+  warning: number;
+  answeredQuestion: any;
 }
 
 const McqSidebar: React.FC<McqSidebarProps> = ({
@@ -38,7 +39,8 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
   setCurrentCode,
   codingQuestionIndex,
   handleCodingQuestionClick,
-  warning
+  warning,
+  answeredQuestion,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -60,7 +62,11 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
 
   const handleSubmit = async () => {
     setLoading(true);
-    const res = await handleTestSubmit(session!.user!.email!, mcqAnswers, warning);
+    const res = await handleTestSubmit(
+      session!.user!.email!,
+      mcqAnswers,
+      warning
+    );
     setLoading(false);
 
     if (res.success) {
@@ -99,9 +105,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
                     key={index}
                     onClick={() => handleQuestionClick(index)}
                     className={`p-2 rounded-md text-white ${
-                      mcqAnswers[index + 1] // Check if the MCQ question is answered
-                        ? "bg-green-500" // Green if answered
-                        : "bg-red-500" // Red if not answered
+                      answeredQuestion[index] ? "bg-green-500" : "bg-red-500"
                     }`}
                   >
                     {index + 1}
@@ -136,14 +140,12 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
             <div className="mb-6 bg-gray rounded-lg p-3">
               <h3 className="text-lg font-medium mb-2">MCQ Questions</h3>
               <div className="grid grid-cols-5 gap-2">
-                {Array.from({ length: totalQuestions }, (_, index) => (
+              {Array.from({ length: totalQuestions }, (_, index) => (
                   <button
                     key={index}
                     onClick={() => handleQuestionClick(index)}
                     className={`p-2 rounded-md text-white ${
-                      mcqAnswers[index + 1] // Check if the MCQ question is answered
-                        ? "bg-green-500" // Green if answered
-                        : "bg-red-500" // Red if not answered
+                      answeredQuestion[index] ? "bg-green-500" : "bg-red-500"
                     }`}
                   >
                     {index + 1}
@@ -231,15 +233,16 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
               </h2>
               <h1 className="text-xl font-semibold">Mcq Questions Review</h1>
               <div className="grid grid-cols-5 gap-2 mb-6">
-                {Array.from({ length: totalQuestions }, (_, index) => (
-                  <div
+              {Array.from({ length: totalQuestions }, (_, index) => (
+                  <button
                     key={index}
-                    className={`py-1 text-center text-white rounded-lg ${
-                      mcqAnswers[index + 1] ? "bg-green-500" : "bg-red-500"
+                    onClick={() => handleQuestionClick(index)}
+                    className={`p-2 rounded-md text-white ${
+                      answeredQuestion[index] ? "bg-green-500" : "bg-red-500"
                     }`}
                   >
                     {index + 1}
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

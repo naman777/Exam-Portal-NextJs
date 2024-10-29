@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -20,13 +20,20 @@ interface McqComponentProps {
   mcq: Mcq;
   updateAnswer: (questionId: number, answer: string) => void;
   mcqAnswers: Record<number, string>;
+  updateAnsweredQuestions: (questionIndex: number) => void;
+  questionIndex: number; // Add this prop to track position
 }
 
-const McqComponent: React.FC<McqComponentProps> = ({ mcq, updateAnswer, mcqAnswers }) => {
+const McqComponent: React.FC<McqComponentProps> = ({
+  mcq,
+  updateAnswer,
+  mcqAnswers,
+  updateAnsweredQuestions,
+  questionIndex, // Use questionIndex for tracking answered questions
+}) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   useEffect(() => {
-    // Retrieve the saved answer from `mcqAnswers` if it exists
     if (mcqAnswers[mcq.id]) {
       setSelectedOption(mcqAnswers[mcq.id]);
     }
@@ -36,7 +43,10 @@ const McqComponent: React.FC<McqComponentProps> = ({ mcq, updateAnswer, mcqAnswe
     setSelectedOption(option);
     updateAnswer(mcq.id, option);
 
-    // Save selected answer to local storage to persist
+    // Save the answered state to the sidebar using questionIndex
+    updateAnsweredQuestions(questionIndex);
+
+    // Save the selected answer to localStorage
     const updatedAnswers = { ...mcqAnswers, [mcq.id]: option };
     localStorage.setItem("mcqanswers", JSON.stringify(updatedAnswers));
   };
