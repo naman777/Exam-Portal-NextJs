@@ -233,7 +233,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
                 Review Your Answers
               </h2>
               <h1 className="text-xl font-semibold">Mcq Questions Review</h1>
-              <div className="grid grid-cols-5 gap-2 mb-6">
+              <div className="grid grid-cols-5 gap-2 mb-6 mt-2">
               {Array.from({ length: totalQuestions }, (_, index) => (
                   <button
                     key={index}

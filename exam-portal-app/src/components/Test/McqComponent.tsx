@@ -57,7 +57,11 @@ const McqComponent: React.FC<McqComponentProps> = ({
     <div className="p-4 rounded-lg shadow-xl bg-white">
       <h1 className="text-2xl font-bold">Multiple Choice Questions</h1>
       <h2 className="text-lg mt-7 text-[#4a4949]">
-        Question: {mcq.question}
+        <span className="font-bold mr-2">
+          
+          Question:{questionIndex+1})
+          </span>
+           {mcq.question}
       </h2>
       {mcq.imageurl && (
         <Image

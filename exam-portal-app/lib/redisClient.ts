@@ -1,22 +1,33 @@
 import Redis from 'ioredis';
 
-let redisClient: Redis | null = null;
+declare global {
+  // Extend global type to include redisClient for reuse in non-production environments
+  var redisClient: Redis | undefined;
+}
 
+let redis: Redis;
+
+// Initialize Redis client only once (singleton)
 const createRedisClient = () => {
-  if (!redisClient) {
-    redisClient = new Redis(process.env.REDIS_URL!);
+  if (!global.redisClient) {
+    console.log('Initializing new Redis client...');
+    
+    global.redisClient = new Redis(process.env.REDIS_URL!);
 
-    redisClient.on('error', (err: any) => {
+    global.redisClient.on('error', (err: any) => {
       console.error('Redis connection error:', err);
     });
 
-    // Optional: Add a listener for successful connection
-    redisClient.on('connect', () => {
+    global.redisClient.on('connect', () => {
       console.log('Connected to Redis server');
     });
   }
 
-  return redisClient;
+  redis = global.redisClient;
+
+  return redis;
 };
 
-export default createRedisClient;
+const redisClient = createRedisClient();
+
+export default redisClient;

@@ -1,6 +1,6 @@
 "use server";
 import prisma from "../../../lib/db";
-import createRedisClient from "../../../lib/redisClient";
+import redis from "../../../lib/redisClient";
 
 export async function isUserExist(email: string) {
   try {
@@ -277,8 +277,13 @@ export const checkForTest = async (email: string) => {
   }
 }
 
-export const handleTestSubmit = async (email: string, mcqAnswers: Record<string, string>, warnings: number) => {
-  const redis = createRedisClient(); 
+
+
+export const handleTestSubmit = async (
+  email: string, 
+  mcqAnswers: Record<string, string>, 
+  warnings: number
+) => {
 
   try {
     // Fetch user
@@ -307,57 +312,54 @@ export const handleTestSubmit = async (email: string, mcqAnswers: Record<string,
       };
     }
 
-    // Fetch test slot with MCQs
-    const testSlot = await prisma.testSlot.findUnique({
-      where: { id: user.testSlotId! },
-      select: {
-        id: true,
-        mcqs: {
-          select: {
-            id: true,
-            answer: true,
-            marks: true,
+    const cacheKey = `testSlot:${user.testSlotId}`;
+
+    // Check if test slot data is cached
+    let testSlot = await redis.get(cacheKey);
+    if (testSlot) {
+      console.log("Using cached test slot");
+      testSlot = JSON.parse(testSlot);
+    } else {
+      console.log("Fetching test slot from DB");
+      //@ts-ignore
+      testSlot = await prisma.testSlot.findUnique({
+        where: { id: user.testSlotId! },
+        select: {
+          id: true,
+          mcqs: {
+            select: {
+              id: true,
+              answer: true,
+              marks: true,
+            },
           },
         },
-      },
-    });
-
-    if (!testSlot) {
-      return {
-        success: false,
-        message: "Test slot not found",
-      };
-    }
-
-    let userMarks = 0;
-    const mcqs = testSlot.mcqs;
-
-    const cacheKey = `answers:${email}:${user.testSlotId}`;
-
-    const cachedMarks = await redis.get(cacheKey);
-    if (cachedMarks) {
-      console.log("Using cached marks");
-      userMarks = parseInt(cachedMarks, 10); 
-    } else {
-      // Evaluate the answers
-
-      mcqs.forEach((mcq) => {
-        const answerId = mcq.id.toString();
-
-        if (parseInt(answerId) in mcqAnswers) {
-          const userAnswer = mcqAnswers[answerId];
-          if (userAnswer === mcq.answer) {
-            userMarks += mcq.marks;
-          }
-        }
       });
 
-      // Cache the marks with an expiration time (e.g., 1 hour)
-      console.log("Caching marks");
-      await redis.set(cacheKey, userMarks, 'EX', 2000);
-    }
+      if (!testSlot) {
+        return {
+          success: false,
+          message: "Test slot not found",
+        };
+      }
 
-    // Update marks in the database
+      await redis.set(cacheKey, JSON.stringify(testSlot), 'EX', 3600);
+    }
+    let userMarks = 0;
+    //@ts-ignore
+    const mcqs = testSlot.mcqs;
+  
+    mcqs.forEach((mcq:any) => {
+      const answerId = mcq.id.toString();
+      if (answerId in mcqAnswers) {
+        const userAnswer = mcqAnswers[answerId];
+        if (userAnswer === mcq.answer) {
+          userMarks += mcq.marks;
+        }
+      }
+    });
+
+    // Update marks and submission status in the database
     await prisma.user.update({
       where: { email },
       data: {
@@ -381,6 +383,7 @@ export const handleTestSubmit = async (email: string, mcqAnswers: Record<string,
     };
   }
 };
+
 
 export const getLeaderboard = async () => {
   try {
