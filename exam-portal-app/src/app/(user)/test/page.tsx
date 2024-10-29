@@ -190,11 +190,14 @@ export default function Home() {
 
   const handleAutoSubmit = async () => {
     toast.error("Time is up. Test will be submitted automatically");
+    
     const res = await handleTestSubmit(
       session!.user!.email!,
       mcqAnswers,
       warning
     );
+    localStorage.removeItem("mcqanswers");
+    localStorage.removeItem("answeredQuestion");
     if (res.success) {
       toast.success("Test submitted successfully");
       router.push("/dashboard");

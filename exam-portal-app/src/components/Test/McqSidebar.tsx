@@ -68,7 +68,8 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
       warning
     );
     setLoading(false);
-
+    localStorage.removeItem("mcqanswers");
+    localStorage.removeItem("answeredQuestion");
     if (res.success) {
       toast.success("Test submitted successfully");
       router.push("/dashboard");
