@@ -189,7 +189,6 @@ export default function FaceVerificationForm() {
       <div className=" flex justify-between">
         <div>
           <Image src="/acm.png" alt="Logo" width={100} height={1200} />
-          <Image src="/acm.png" alt="Logo" width={100} height={1200} />
         </div>
         <form
           onSubmit={handleSubmit}
