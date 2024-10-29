@@ -10,8 +10,8 @@ const Rules: React.FC = () => {
   
         <h2 className="text-lg font-bold mt-6 mb-4">Marking Scheme</h2>
         <ul className="list-disc list-inside space-y-2 text-[#8C8C8C]">
-          <li>Detailed explanation of marking scheme will go here.</li>
-          <li>Allotted marks for each question will be mentioned.</li>
+          <li>There will be 25 Mcq Questions of 4 marks each.</li>
+          <li>No negative marking is there.</li>
         </ul>
       </div>
     );

@@ -183,8 +183,4 @@ async function sendMCQs(apiUrl, testId, password, questionsArray) {
     }
   ];
   
-const apiUrl = "https://examportal.acmtiet.com/api/admin/mcq";
-const testId = "cm2o6dsk40002ecvjoslj09vw";
-const password = "examportal@naman";
-
 sendMCQs(apiUrl, testId, password, questions);

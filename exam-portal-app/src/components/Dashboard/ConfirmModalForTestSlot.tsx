@@ -16,7 +16,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm,
       <div className="bg-white p-6 rounded-lg shadow-lg z-50">
         <h2 className="text-xl font-bold mb-4">Confirm Booking</h2>
         <p className="mb-4">
-          Are you sure you want to book the test slot for <strong>{selectedSlotTime}</strong> on <strong>{selectedDate}</strong>?
+          Are you sure you want to book the test slot for <strong>{selectedSlotTime}</strong> on <strong>{selectedDate}</strong>?<br/>
+          Test will be of 25 minutes duration and consist of 25 questions with 4 marks each.
         </p>
         <div className="flex justify-end space-x-4">
           <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
