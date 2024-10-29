@@ -253,8 +253,6 @@ export default function Home() {
     localStorage.setItem("mcqanswers", JSON.stringify(newAnswers));
   };
 
-  
-
   const toggleSection = () => {
     setShowCoding((prev) => !prev); // Toggle between MCQ and Coding
   };
