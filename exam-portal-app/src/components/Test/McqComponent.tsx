@@ -59,12 +59,12 @@ const McqComponent: React.FC<McqComponentProps> = ({
       <h2 className="text-lg mt-7 text-[#4a4949]">
         <span className="font-bold mr-2">Question:{questionIndex + 1})</span>
         {mcq.question.split("\n").map((line, index) => (
-          <div key={index}>
+          <div key={index} style={{ whiteSpace: "pre-wrap" }}>
             {line}
-            <br />
           </div>
         ))}
       </h2>
+
       {mcq.imageurl && (
         <Image
           src={mcq.imageurl}
