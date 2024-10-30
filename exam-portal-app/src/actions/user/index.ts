@@ -202,12 +202,13 @@ export const checkForTest = async (email: string) => {
       };
     }
 
-    const cacheKey = `testSlot:${user.testSlotId}`;
+    const cacheKey = `testSlotforUser:${user.testSlotId}`;
     const cachedTestSlot = await redis.get(cacheKey);
 
     let testSlot;
 
     if (cachedTestSlot) {
+      console.log("Using cached test slot");
       testSlot = JSON.parse(cachedTestSlot);
     } else {
       testSlot = await prisma.testSlot.findUnique({
@@ -317,7 +318,7 @@ export const handleTestSubmit = async (
       };
     }
 
-    const cacheKey = `testSlot:${user.testSlotId}`;
+    const cacheKey = `testSlotforAnswer:${user.testSlotId}`;
 
     // Check if test slot data is cached
     let testSlot = await redis.get(cacheKey);
@@ -353,14 +354,18 @@ export const handleTestSubmit = async (
     let userMarks = 0;
     //@ts-ignore
     const mcqs = testSlot.mcqs;
-  
+    console.log(mcqAnswers);
+    console.log(mcqs);
     mcqs.forEach((mcq:any) => {
       const answerId = mcq.id.toString();
       if (answerId in mcqAnswers) {
         const userAnswer = mcqAnswers[answerId];
+        console.log(userAnswer);
+        console.log(mcq.answer);
         if (userAnswer === mcq.answer) {
           userMarks += mcq.marks;
         }
+        console.log(userMarks);
       }
     });
 
