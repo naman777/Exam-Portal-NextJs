@@ -61,6 +61,7 @@ const McqSidebar: React.FC<McqSidebarProps> = ({
   const closeModal = () => setIsModalOpen(false);
 
   const handleSubmit = async () => {
+    console.log("Submit");
     setLoading(true);
     const res = await handleTestSubmit(
       session!.user!.email!,
