@@ -34,6 +34,7 @@ const McqComponent: React.FC<McqComponentProps> = ({
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log("Working fine");
     if (mcqAnswers[mcq.id]) {
       setSelectedOption(mcqAnswers[mcq.id]);
     }
