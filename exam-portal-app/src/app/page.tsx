@@ -56,6 +56,52 @@ const SubmitButton = ({
   );
 };
 
+const LeaderboardButton = ({
+  onClick,
+  disabled,
+}: {
+  onClick: () => void;
+  disabled: boolean;
+}) => {
+  return (
+    <button
+      type="submit"
+      // className="flex gap-2 content-center self-center px-9 py-4 mt-8 max-w-full text-xl font-semibold text-white whitespace-nowrap bg-lightblue rounded-2xl shadow-[0px_8px_23px_rgba(173,220,255,1)] w-[180px]"
+      style={{
+        backgroundColor: "#0baadd",
+        color: "white",
+        padding: "0.75rem 1.5rem",
+        borderRadius: "1rem",
+        boxShadow: "0px 8px 23px rgba(173, 220, 255, 1)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
+      }}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <span
+        className="grow"
+        style={{
+          fontSize: "1.25rem",
+          fontWeight: "bold",
+          whiteSpace: "nowrap",
+          alignSelf: "center",
+        }}
+      >
+        Show Leaderboard{" "}
+      </span>
+      <img
+        loading="lazy"
+        src="https://cdn.builder.io/api/v1/image/assets/TEMP/1b3f218f4269107c990a1fffcd133ff33dbba696fed536ec177ac34a3f8adbee?placeholderIfAbsent=true&apiKey=3bcad2a00ff743a3a851fc72d0289ec0"
+        alt=""
+        className="mt-1"
+      />
+    </button>
+  );
+};
+
 export default function Page() {
   const { data: session } = useSession();
   const email = session?.user?.email;
@@ -139,14 +185,20 @@ export default function Page() {
                 ))}
               </AnimatePresence>
             </h1>
+            <div className="sm:flex gap-8 flex flex-col">
+
             <div className="mt-12 ml-4">
               <SubmitButton
                 onClick={() => {
                   signIn("google");
                 }}
                 disabled={false}
-              />
+                />
             </div>
+            <div className=" ">
+              <LeaderboardButton onClick={() => router.push("/leaderboard")} disabled={false} />
+            </div>
+                </div>
           </div>
           <Image
             src={frontGroup}
