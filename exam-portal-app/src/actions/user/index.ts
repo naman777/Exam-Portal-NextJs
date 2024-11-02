@@ -406,6 +406,7 @@ export const getLeaderboard = async () => {
         email: true,
         name: true,
         marks: true,
+        rollNo: true,
       },
     })
 
