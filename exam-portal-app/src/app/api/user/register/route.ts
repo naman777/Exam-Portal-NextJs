@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     const newUser = await prisma.user.update({
       where: {
         email: email, 
-        signUpt false
+        signUp: false
       },
       data: {
         name,
