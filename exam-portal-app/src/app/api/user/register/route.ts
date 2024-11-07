@@ -40,7 +40,8 @@ export async function POST(req: NextRequest) {
     // Create user in Prisma
     const newUser = await prisma.user.update({
       where: {
-        email: email
+        email: email, 
+        signUpt false
       },
       data: {
         name,
